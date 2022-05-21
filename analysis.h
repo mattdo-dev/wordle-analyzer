@@ -1,7 +1,3 @@
-//
-// Created by Matt Do on 5/20/2022.
-//
-
 #ifndef UNTITLED_ANALYSIS_H
 #define UNTITLED_ANALYSIS_H
 
@@ -9,6 +5,7 @@
 #include <map>
 
 class Analysis {
+private:
     const std::string ALPHABET = {"abcdefghijklmnopqrstuvwxyz"};
     int lines = 0;
 

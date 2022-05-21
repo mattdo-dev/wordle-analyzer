@@ -89,6 +89,30 @@ void Analysis::display() {
     float* weights_five = f_five.get();
 
     for (int i = 0; i < ALPHABET.length(); i++) {
-        std::cout << weights_one[i] << ", ";
+        std::cout << ALPHABET[i] << ": " << weights_one[i] << ", ";
+    }
+
+    std::cout << "\n";
+
+    for (int i = 0; i < ALPHABET.length(); i++) {
+        std::cout << ALPHABET[i] << ": " << weights_two[i] << ", ";
+    }
+
+    std::cout << "\n";
+
+    for (int i = 0; i < ALPHABET.length(); i++) {
+        std::cout << ALPHABET[i] << ": " << weights_three[i] << ", ";
+    }
+
+    std::cout << "\n";
+
+    for (int i = 0; i < ALPHABET.length(); i++) {
+        std::cout << ALPHABET[i] << ": " << weights_four[i] << ", ";
+    }
+
+    std::cout << "\n";
+
+    for (int i = 0; i < ALPHABET.length(); i++) {
+        std::cout << ALPHABET[i] << ": " << weights_five[i] << ", ";
     }
 }
