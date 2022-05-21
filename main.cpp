@@ -20,7 +20,7 @@ int main() {
 
         file.close();
 
-        analysis.data();
+        analysis.display();
 
     } catch (const std::ifstream::failure& failure) {
         std::cout << failure.what() << "\n";

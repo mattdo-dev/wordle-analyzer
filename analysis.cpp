@@ -3,11 +3,13 @@
 //
 
 #include <iostream>
+#include <iomanip>
+#include <thread>
 #include "analysis.h"
 
 Analysis::Analysis() {
     for (char c : ALPHABET) {
-        first.insert(std::pair<char, int>(c, 0));
+        first.insert(std::pair<const char, int>(c, 0));
         second = first;
         third = first;
         fourth = first;
@@ -17,15 +19,27 @@ Analysis::Analysis() {
 
 
 void Analysis::enter(std::string word) {
-    first.insert(std::pair<char, int>(word.at(0), 1 + first.at(word.at(0))));
-    second.insert(std::pair<char, int>(word.at(1), second.at(word.at(1)) + 1));
-    third.insert(std::pair<char, int>(word.at(2), third.at(word.at(2)) + 1));
-    fourth.insert(std::pair<char, int>(word.at(3), fourth.at(word.at(3)) + 1));
-    fifth.insert(std::pair<char, int>(word.at(4), fifth.at(word.at(4)) + 1));
+    first[word.at(0)]++;
+    second[word.at(1)]++;
+    third[word.at(2)]++;
+    fourth[word.at(3)]++;
+    fifth[word.at(4)]++;
 }
 
-void Analysis::data() {
-    for (const auto& val : first) {
-        std::cout << val.first << ": " << val.second << " / ";
+void Analysis::display() {
+    int count = 0;
+    for (auto const& x : this->first) {
+        count = count + x.second;
+    }
+
+    auto two = [this] {
+
+    };
+
+    std::thread th_two(two);
+
+
+    for (auto const& x : first) {
+        std::cout << x.first << ": " << std::setprecision(4) << (double) x.second / count * 100 << "%; \n";
     }
 }
