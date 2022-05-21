@@ -32,7 +32,7 @@ float* Analysis::assign_weight(const std::map<const char, int>& map) {
     int i = 0;
     auto *weights = new float[this->lines];
     for (auto const x : map) {
-        weights[i] = (float) x.second /  (float) this->lines;
+        weights[i] = (float) x.second /  (float) this->lines * 100;
         i++;
     }
     return weights;
@@ -83,8 +83,12 @@ void Analysis::display() {
     th_five.join();
 
     float* weights_one = f_one.get();
+    float* weights_two = f_two.get();
+    float* weights_three = f_three.get();
+    float* weights_four = f_four.get();
+    float* weights_five = f_five.get();
 
-    for (int i = 0; i < sizeof(weights_one); i++) {
+    for (int i = 0; i < ALPHABET.length(); i++) {
         std::cout << weights_one[i] << ", ";
     }
 }
