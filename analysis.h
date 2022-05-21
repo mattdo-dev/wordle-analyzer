@@ -10,6 +10,7 @@
 
 class Analysis {
     const std::string ALPHABET = {"abcdefghijklmnopqrstuvwxyz"};
+    int lines = 0;
 
     std::map<const char, int> first;
     std::map<const char, int> second;
@@ -21,6 +22,9 @@ public:
     Analysis();
     void enter(std::string str);
     void display();
+
+private:
+    void assign_weight(const std::map<const char, int>& map);
 };
 
 
