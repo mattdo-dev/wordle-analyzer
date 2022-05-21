@@ -24,7 +24,7 @@ public:
     void display();
 
 private:
-    void assign_weight(const std::map<const char, int>& map);
+    float* assign_weight(const std::map<const char, int>& map);
 };
 
 

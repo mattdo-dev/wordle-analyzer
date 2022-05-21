@@ -28,66 +28,53 @@ void Analysis::enter(std::string word) {
     lines++;
 }
 
-void Analysis::assign_weight(const std::map<const char, int>& map) {
-
+float* Analysis::assign_weight(const std::map<const char, int>& map) {
+    int i = 0;
+    auto *weights = new float[this->lines];
+    for (auto const x : map) {
+        weights[i] = (float) x.second /  (float) this->lines;
+        i++;
+    }
+    return weights;
 }
 
 void Analysis::display() {
-    auto one = [this] {
-        int i = 0;
-        auto *weights = new float[this->lines];
-        for (auto const& x : first) {
-            weights[i] = (float) x.second /  (float) this->lines;
-            i++;
-        }
-        return weights;
+    auto one = [this](std::promise<float*> p) {
+        p.set_value(assign_weight(first));
     };
 
-    auto two = [this] {
-        int i = 0;
-        auto *weights = new float[this->lines];
-        for (auto const& x : second) {
-            weights[i] = (float) x.second /  (float) this->lines;
-            i++;
-        }
-        return weights;
+    auto two = [this](std::promise<float*> p) {
+        p.set_value(assign_weight(second));
     };
 
-    auto three = [this] {
-        int i = 0;
-        auto *weights = new float[this->lines];
-        for (auto const& x : third) {
-            weights[i] = (float) x.second /  (float) this->lines;
-            i++;
-        }
-        return weights;
+    auto three = [this](std::promise<float*> p) {
+        p.set_value(assign_weight(third));
     };
 
-    auto four = [this] {
-        int i = 0;
-        auto *weights = new float[this->lines];
-        for (auto const& x : fourth) {
-            weights[i] = (float) x.second /  (float) this->lines;
-            i++;
-        }
-        return weights;
+    auto four = [this](std::promise<float*> p) {
+        p.set_value(assign_weight(fourth));
     };
 
-    auto five = [this] {
-        int i = 0;
-        auto *weights = new float[this->lines];
-        for (auto const& x : fifth) {
-            weights[i] = (float) x.second /  (float) this->lines;
-            i++;
-        }
-        return weights;
+    auto five = [this](std::promise<float*> p) {
+        p.set_value(assign_weight(fifth));
     };
 
-    std::thread th_one(one);
-    std::thread th_two(two);
-    std::thread th_three(three);
-    std::thread th_four(four);
-    std::thread th_five(five);
+    std::promise<float*> pr_one;
+    auto f_one = pr_one.get_future();
+    std::promise<float*> pr_two;
+    auto f_two = pr_two.get_future();
+    std::promise<float*> pr_three;
+    auto f_three = pr_three.get_future();
+    std::promise<float*> pr_four;
+    auto f_four = pr_four.get_future();
+    std::promise<float*> pr_five;
+    auto f_five = pr_five.get_future();
+
+    std::thread th_one(one, std::move(pr_one));
+    std::thread th_two(two, std::move(pr_two));
+    std::thread th_three(three, std::move(pr_three));
+    std::thread th_four(four, std::move(pr_four));
+    std::thread th_five(five, std::move(pr_five));
 
     th_one.join();
     th_two.join();
@@ -95,7 +82,9 @@ void Analysis::display() {
     th_four.join();
     th_five.join();
 
-    std::promise<float *> p;
-    auto f = p.get_future();
-    float * array = f.get();
+    float* weights_one = f_one.get();
+
+    for (int i = 0; i < sizeof(weights_one); i++) {
+        std::cout << weights_one[i] << ", ";
+    }
 }
