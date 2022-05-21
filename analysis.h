@@ -3,11 +3,15 @@
 
 
 #include <map>
+#include <vector>
 
 class Analysis {
 private:
     const std::string ALPHABET = {"abcdefghijklmnopqrstuvwxyz"};
+    const std::vector<std::string> words;
     int lines = 0;
+
+    //TODO: work on assigning calculated weights to each word...
 
     std::map<const char, int> first;
     std::map<const char, int> second;
@@ -17,11 +21,13 @@ private:
 
 public:
     Analysis();
+
     void enter(std::string str);
+
     void display();
 
 private:
-    float* assign_weight(const std::map<const char, int>& map);
+    float *assign_weight(const std::map<const char, int> &map);
 };
 
 

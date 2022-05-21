@@ -13,7 +13,7 @@ int main() {
 
         if (file.is_open()) {
             std::string word;
-            while(std::getline(file, word)) {
+            while (std::getline(file, word)) {
                 analysis.enter(word);
             }
         }
@@ -22,7 +22,7 @@ int main() {
 
         analysis.display();
 
-    } catch (const std::ifstream::failure& failure) {
+    } catch (const std::ifstream::failure &failure) {
         std::cout << failure.what() << "\n";
     }
 
