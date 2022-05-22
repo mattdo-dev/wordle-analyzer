@@ -29,7 +29,7 @@ void Analysis::enter(std::string word) {
     fifth[word.at(4)]++;
 }
 
-float *Analysis::assign_weight(const std::map<const char, int> &map) const {
+float *Analysis::calculate_weight(const std::map<const char, int> &map) const {
     int i = 0;
     auto *weights = new float[this->lines];
     for (auto const x: map) {
@@ -42,23 +42,23 @@ float *Analysis::assign_weight(const std::map<const char, int> &map) const {
 void Analysis::create_weights() {
     lines = words.size();
     auto one = [this](std::promise<float *> p) {
-        p.set_value(assign_weight(first));
+        p.set_value(calculate_weight(first));
     };
 
     auto two = [this](std::promise<float *> p) {
-        p.set_value(assign_weight(second));
+        p.set_value(calculate_weight(second));
     };
 
     auto three = [this](std::promise<float *> p) {
-        p.set_value(assign_weight(third));
+        p.set_value(calculate_weight(third));
     };
 
     auto four = [this](std::promise<float *> p) {
-        p.set_value(assign_weight(fourth));
+        p.set_value(calculate_weight(fourth));
     };
 
     auto five = [this](std::promise<float *> p) {
-        p.set_value(assign_weight(fifth));
+        p.set_value(calculate_weight(fifth));
     };
 
     std::promise<float *> pr_one;
@@ -78,15 +78,21 @@ void Analysis::create_weights() {
     std::thread th_four(four, std::move(pr_four));
     std::thread th_five(five, std::move(pr_five));
 
+    //TODO: figure out the proper data structure for optimization...
+
     th_one.join();
     th_two.join();
     th_three.join();
     th_four.join();
     th_five.join();
 
-    float *weights_one = f_one.get();
-    float *weights_two = f_two.get();
-    float *weights_three = f_three.get();
-    float *weights_four = f_four.get();
-    float *weights_five = f_five.get();
+    weights_one = f_one.get();
+    weights_two = f_two.get();
+    weights_three = f_three.get();
+    weights_four = f_four.get();
+    weights_five = f_five.get();
+}
+
+void Analysis::set_weight_array() {
+
 }
