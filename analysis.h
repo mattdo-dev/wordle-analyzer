@@ -8,8 +8,8 @@
 class Analysis {
 private:
     const std::string ALPHABET = {"abcdefghijklmnopqrstuvwxyz"};
-    const std::vector<std::string> words;
-    int lines = 0;
+    std::vector<std::string> words;
+    unsigned int lines;
 
     //TODO: work on assigning calculated weights to each word...
 
@@ -21,13 +21,11 @@ private:
 
 public:
     Analysis();
-
     void enter(std::string str);
-
-    void display();
+    void create_weights();
 
 private:
-    float *assign_weight(const std::map<const char, int> &map);
+    float *assign_weight(const std::map<const char, int> &map) const;
 };
 
 

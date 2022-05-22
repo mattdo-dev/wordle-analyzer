@@ -20,7 +20,7 @@ int main() {
 
         file.close();
 
-        analysis.display();
+        analysis.create_weights();
 
     } catch (const std::ifstream::failure &failure) {
         std::cout << failure.what() << "\n";

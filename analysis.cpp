@@ -21,15 +21,15 @@ Analysis::Analysis() {
 
 
 void Analysis::enter(std::string word) {
+    words.push_back(word);
     first[word.at(0)]++;
     second[word.at(1)]++;
     third[word.at(2)]++;
     fourth[word.at(3)]++;
     fifth[word.at(4)]++;
-    lines++;
 }
 
-float *Analysis::assign_weight(const std::map<const char, int> &map) {
+float *Analysis::assign_weight(const std::map<const char, int> &map) const {
     int i = 0;
     auto *weights = new float[this->lines];
     for (auto const x: map) {
@@ -39,7 +39,8 @@ float *Analysis::assign_weight(const std::map<const char, int> &map) {
     return weights;
 }
 
-void Analysis::display() {
+void Analysis::create_weights() {
+    lines = words.size();
     auto one = [this](std::promise<float *> p) {
         p.set_value(assign_weight(first));
     };
@@ -88,32 +89,4 @@ void Analysis::display() {
     float *weights_three = f_three.get();
     float *weights_four = f_four.get();
     float *weights_five = f_five.get();
-
-    for (int i = 0; i < ALPHABET.length(); i++) {
-        std::cout << ALPHABET[i] << ": " << weights_one[i] << ", ";
-    }
-
-    std::cout << "\n";
-
-    for (int i = 0; i < ALPHABET.length(); i++) {
-        std::cout << ALPHABET[i] << ": " << weights_two[i] << ", ";
-    }
-
-    std::cout << "\n";
-
-    for (int i = 0; i < ALPHABET.length(); i++) {
-        std::cout << ALPHABET[i] << ": " << weights_three[i] << ", ";
-    }
-
-    std::cout << "\n";
-
-    for (int i = 0; i < ALPHABET.length(); i++) {
-        std::cout << ALPHABET[i] << ": " << weights_four[i] << ", ";
-    }
-
-    std::cout << "\n";
-
-    for (int i = 0; i < ALPHABET.length(); i++) {
-        std::cout << ALPHABET[i] << ": " << weights_five[i] << ", ";
-    }
 }
