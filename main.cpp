@@ -21,6 +21,7 @@ int main() {
         file.close();
 
         analysis.create_weights();
+        analysis.set_weight_array();
 
     } catch (const std::ifstream::failure &failure) {
         std::cout << failure.what() << "\n";

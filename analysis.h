@@ -5,12 +5,27 @@
 #include <map>
 #include <vector>
 
+struct weighted_word {
+    std::string word;
+    char a;
+    float a_f;
+    char b;
+    float b_f;
+    char c;
+    float c_f;
+    char d;
+    float d_f;
+    char e;
+    float e_f;
+    float weight;
+};
+
 class Analysis {
 private:
     const std::string ALPHABET = {"abcdefghijklmnopqrstuvwxyz"};
 
     std::vector<std::string> words;
-    unsigned int lines;
+    unsigned int lines{};
 
     std::map<const char, int> first;
     std::map<const char, int> second;
@@ -18,11 +33,13 @@ private:
     std::map<const char, int> fourth;
     std::map<const char, int> fifth;
 
-    float* weights_one;
-    float* weights_two;
-    float* weights_three;
-    float* weights_four;
-    float* weights_five;
+    std::map<char, float> weighted_first{};
+    std::map<char, float> weighted_second{};
+    std::map<char, float> weighted_third{};
+    std::map<char, float> weighted_fourth{};
+    std::map<char, float> weighted_fifth{};
+
+    std::vector<weighted_word> weighted_words;
 
 public:
     Analysis();
@@ -31,7 +48,8 @@ public:
     void set_weight_array();
 
 private:
-    float *calculate_weight(const std::map<const char, int> &map) const;
+    std::map<char, float> calculate_weight(const std::map<const char, int> &map) const;
+    weighted_word generate_weighted_word(std::string);
 };
 
 
