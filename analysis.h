@@ -7,12 +7,13 @@
 
 struct weighted_word {
     std::string word;
-    std::pair<const char, float> first;
-    std::pair<const char, float> second;
-    std::pair<const char, float> third;
-    std::pair<const char, float> fourth;
-    std::pair<const char, float> fifth;
-    float weight;
+    std::pair<char, float> first;
+    std::pair<char, float> second;
+    std::pair<char, float> third;
+    std::pair<char, float> fourth;
+    std::pair<char, float> fifth;
+    float linear;
+    float complex;
 };
 
 class Analysis {
@@ -49,6 +50,8 @@ private:
     std::map<char, float> calculate_weight(const std::map<const char, int> &map) const;
 
     weighted_word generate_weighted_word(std::string);
+
+    static bool compare(const weighted_word& lhs, const weighted_word& rhs);
 };
 
 

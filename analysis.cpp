@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <iomanip>
 #include <thread>
@@ -95,10 +96,18 @@ void Analysis::set_weight_array() {
     //  yellow squares: exclude in current index
     //  green squares: check only in current index
 
+    std::sort(weighted_words.begin(), weighted_words.end(), &Analysis::compare);
+
     // temporary for display purposes, wordle #338
     // guesses: CRANE (personal), SNIDE, BINGE, HINGE
-    for (weighted_word w: weighted_words) {
-
+    for (const weighted_word& ww: weighted_words) {
+        std::cout << ww.word << ": "
+                  << ww.first.first << ": " << ww.first.second << ", "
+                  << ww.second.first << ": " << ww.second.second << ", "
+                  << ww.third.first << ": " << ww.third.second << ", "
+                  << ww.fourth.first << ": " << ww.fourth.second << ", "
+                  << ww.fifth.first << ": " << ww.fifth.second << ", "
+                  << "weight: " << ww.linear << ", " << "\n";
     }
 }
 
@@ -116,6 +125,15 @@ weighted_word Analysis::generate_weighted_word(std::string word) {
             std::pair<const char, float>(word.at(2), _three),
             std::pair<const char, float>(word.at(3), _four),
             std::pair<const char, float>(word.at(4), _five),
-            _one + _two + _three + _four + _five
+            _one + _two + _three + _four + _five,
+            (_one * _two) / 2 + (_two * _three) / 3 + (_three + _four) / 3 * (_four + _five) / 2,
     };
+}
+
+bool Analysis::compare(const weighted_word& lhs, const weighted_word& rhs) {
+    // Highest first
+    if (lhs.linear < rhs.linear) {
+        return false;
+    }
+    return true;
 }
