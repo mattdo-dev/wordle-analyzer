@@ -43,12 +43,16 @@ private:
 
 public:
     Analysis();
+
     void enter(std::string str);
+
     void create_weights();
+
     void set_weight_array();
 
 private:
     std::map<char, float> calculate_weight(const std::map<const char, int> &map) const;
+
     weighted_word generate_weighted_word(std::string);
 };
 

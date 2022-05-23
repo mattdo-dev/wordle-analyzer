@@ -19,7 +19,6 @@ Analysis::Analysis() {
     }
 }
 
-
 void Analysis::enter(std::string word) {
     words.push_back(word);
     first[word.at(0)]++;
@@ -31,7 +30,7 @@ void Analysis::enter(std::string word) {
 
 std::map<char, float> Analysis::calculate_weight(const std::map<const char, int> &map) const {
     std::map<char, float> weights;
-    for (auto const& x : map) {
+    for (auto const &x: map) {
         weights.insert(std::pair<const char, float>(x.first, (float) x.second / (float) lines * 100));
     }
     return weights;
@@ -90,7 +89,7 @@ void Analysis::create_weights() {
 }
 
 void Analysis::set_weight_array() {
-    for (const std::string& word : words) {
+    for (const std::string &word: words) {
         weighted_words.push_back(generate_weighted_word(word));
     }
 
@@ -101,9 +100,11 @@ void Analysis::set_weight_array() {
     //  green squares: check only in current index
 
     // temporary for display purposes, wordle #337
-    for (const weighted_word& ww : weighted_words) {
+    for (const weighted_word &ww: weighted_words) {
         if (ww.a == 'm' && ww.b == 'o' && ww.d == 'e') {
-            std::cout << ww.word << ": " << ww.a << ": " << ww.a_f << ", " <<  ww.b << ": " << ww.b_f << ", " << ww.c << ": " << ww.c_f << ", " << ww.d << ": " << ww.d_f << ", " << ww.e << ": " << ww.e_f << ", " << "weight: " << ww.weight << ", " <<  "\n ";
+            std::cout << ww.word << ": " << ww.a << ": " << ww.a_f << ", " << ww.b << ": " << ww.b_f << ", " << ww.c
+                      << ": " << ww.c_f << ", " << ww.d << ": " << ww.d_f << ", " << ww.e << ": " << ww.e_f << ", "
+                      << "weight: " << ww.weight << ", " << "\n ";
         }
     }
 }
@@ -115,18 +116,18 @@ weighted_word Analysis::generate_weighted_word(std::string word) {
     float _four = weighted_fourth.at(word.at(3));
     float _five = weighted_fifth.at(word.at(4));
 
-    return weighted_word {
-        word,
-        word.at(0),
-        _one,
-        word.at(1),
-        _two,
-        word.at(2),
-        _three,
-        word.at(3),
-        _four,
-        word.at(4),
-        _five,
-        _one + _two + _three + _four + _five
+    return weighted_word{
+            word,
+            word.at(0),
+            _one,
+            word.at(1),
+            _two,
+            word.at(2),
+            _three,
+            word.at(3),
+            _four,
+            word.at(4),
+            _five,
+            _one + _two + _three + _four + _five
     };
 }
