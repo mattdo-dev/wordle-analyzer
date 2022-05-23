@@ -1,7 +1,3 @@
-//
-// Created by Matt Do on 5/20/2022.
-//
-
 #include <iostream>
 #include <iomanip>
 #include <thread>
