@@ -94,8 +94,17 @@ void Analysis::set_weight_array() {
         weighted_words.push_back(generate_weighted_word(word));
     }
 
+    // TODO:
+    //  filter, generate new weights(?) for each check iteration
+    //  grey squares: exclude word entirely
+    //  yellow squares: exclude in current index
+    //  green squares: check only in current index
+
+    // temporary for display purposes, wordle #337
     for (const weighted_word& ww : weighted_words) {
-        std::cout << ww.word << ": " << ww.a << ": " << ww.a_f << ", " <<  ww.b << ": " << ww.b_f << ", " << ww.c << ": " << ww.c_f << ", " << ww.d << ": " << ww.d_f << ", " << ww.e << ": " << ww.e_f << ", " << "weight: " << ww.weight << ", " <<  "\n ";
+        if (ww.a == 'm' && ww.b == 'o' && ww.d == 'e') {
+            std::cout << ww.word << ": " << ww.a << ": " << ww.a_f << ", " <<  ww.b << ": " << ww.b_f << ", " << ww.c << ": " << ww.c_f << ", " << ww.d << ": " << ww.d_f << ", " << ww.e << ": " << ww.e_f << ", " << "weight: " << ww.weight << ", " <<  "\n ";
+        }
     }
 }
 
