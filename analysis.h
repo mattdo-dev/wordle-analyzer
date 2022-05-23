@@ -7,16 +7,11 @@
 
 struct weighted_word {
     std::string word;
-    const char a;
-    float a_f;
-    const char b;
-    float b_f;
-    const char c;
-    float c_f;
-    const char d;
-    float d_f;
-    const char e;
-    float e_f;
+    std::pair<const char, float> first;
+    std::pair<const char, float> second;
+    std::pair<const char, float> third;
+    std::pair<const char, float> fourth;
+    std::pair<const char, float> fifth;
     float weight;
 };
 

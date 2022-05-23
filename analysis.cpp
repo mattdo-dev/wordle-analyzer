@@ -99,13 +99,10 @@ void Analysis::set_weight_array() {
     //  yellow squares: exclude in current index
     //  green squares: check only in current index
 
-    // temporary for display purposes, wordle #337
-    for (const weighted_word &ww: weighted_words) {
-        if (ww.a == 'm' && ww.b == 'o' && ww.d == 'e') {
-            std::cout << ww.word << ": " << ww.a << ": " << ww.a_f << ", " << ww.b << ": " << ww.b_f << ", " << ww.c
-                      << ": " << ww.c_f << ", " << ww.d << ": " << ww.d_f << ", " << ww.e << ": " << ww.e_f << ", "
-                      << "weight: " << ww.weight << ", " << "\n ";
-        }
+    // temporary for display purposes, wordle #338
+    // guesses: CRANE (personal), SNIDE, BINGE, HINGE
+    for (weighted_word w: weighted_words) {
+
     }
 }
 
@@ -118,16 +115,11 @@ weighted_word Analysis::generate_weighted_word(std::string word) {
 
     return weighted_word{
             word,
-            word.at(0),
-            _one,
-            word.at(1),
-            _two,
-            word.at(2),
-            _three,
-            word.at(3),
-            _four,
-            word.at(4),
-            _five,
+            std::pair<const char, float>(word.at(0), _one),
+            std::pair<const char, float>(word.at(1), _two),
+            std::pair<const char, float>(word.at(2), _three),
+            std::pair<const char, float>(word.at(3), _four),
+            std::pair<const char, float>(word.at(4), _five),
             _one + _two + _three + _four + _five
     };
 }
