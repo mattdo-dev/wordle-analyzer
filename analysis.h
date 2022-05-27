@@ -5,6 +5,12 @@
 #include <map>
 #include <vector>
 
+ typedef struct State {
+    int GREEN = 0;
+    int YELLOW = 1;
+    int GREY = 2;
+} State;
+
 struct weighted_word {
     std::string word;
     std::pair<char, float> first;
@@ -44,7 +50,9 @@ public:
 
     void create_weights();
 
-    void set_weight_array();
+    void set_array_weight();
+
+    void test_word(std::pair<char, State> a, std::pair<char, State> b, std::pair<char, State> c, std::pair<char, State> d, std::pair<char, State>e);
 
 private:
     std::map<char, float> calculate_weight(const std::map<const char, int> &map) const;

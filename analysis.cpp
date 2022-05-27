@@ -85,7 +85,7 @@ void Analysis::create_weights() {
     weighted_fifth = f_five.get();
 }
 
-void Analysis::set_weight_array() {
+void Analysis::set_array_weight() {
     for (const std::string &word: words) {
         weighted_words.push_back(generate_weighted_word(word));
     }
@@ -109,6 +109,11 @@ void Analysis::set_weight_array() {
                   << ww.fifth.first << ": " << ww.fifth.second << ", "
                   << "weight: " << ww.linear << ", " << "\n";
     }
+}
+
+void Analysis::test_word(std::pair<char, State> a, std::pair<char, State> b, std::pair<char, State> c,
+                         std::pair<char, State> d, std::pair<char, State> e) {
+    
 }
 
 weighted_word Analysis::generate_weighted_word(std::string word) {
