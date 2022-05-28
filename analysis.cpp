@@ -101,20 +101,36 @@ void Analysis::set_array_weight() {
     // temporary for display purposes, wordle #338
     // guesses: CRANE (personal), SNIDE, BINGE, HINGE
     for (const weighted_word& ww: weighted_words) {
-        std::cout << ww.word << ": "
-                  << ww.first.first << ": " << ww.first.second << ", "
-                  << ww.second.first << ": " << ww.second.second << ", "
-                  << ww.third.first << ": " << ww.third.second << ", "
-                  << ww.fourth.first << ": " << ww.fourth.second << ", "
-                  << ww.fifth.first << ": " << ww.fifth.second << ", "
-                  << "weight: " << ww.linear << ", " << "\n";
+        if (ww.first.first == 'c' && ww.second.first == 'r' && ww.fifth.first != 'e') {
+            std::cout << ww.word << ": "
+                      << ww.first.first << ": " << ww.first.second << ", "
+                      << ww.second.first << ": " << ww.second.second << ", "
+                      << ww.third.first << ": " << ww.third.second << ", "
+                      << ww.fourth.first << ": " << ww.fourth.second << ", "
+                      << ww.fifth.first << ": " << ww.fifth.second << ", "
+                      << "weight: " << ww.linear << ", " << "\n";
+
+        }
     }
 }
 
-void Analysis::test_word(std::pair<char, State> a, std::pair<char, State> b, std::pair<char, State> c,
-                         std::pair<char, State> d, std::pair<char, State> e) {
-    
-}
+//void Analysis::test_word(std::pair<char, State> a, std::pair<char, State> b, std::pair<char, State> c,
+//                         std::pair<char, State> d, std::pair<char, State> e) {
+//
+//    bool filter;
+//
+//    if (a.second == State::GREEN) {
+//        if (weighted_words.at(0).first.first == a.first) {
+//            filter = filter && weighted_words. ;
+//        }
+//    } else if (a.second == State::YELLOW) {
+//        for (const weighted_word& w : weighted_words) {
+//            if (w.first.first == a.first) {
+//                filter = filter && a.first && ;
+//            }
+//        }
+//    }
+//}
 
 weighted_word Analysis::generate_weighted_word(std::string word) {
     float _one = weighted_first.at(word.at(0));
@@ -123,7 +139,7 @@ weighted_word Analysis::generate_weighted_word(std::string word) {
     float _four = weighted_fourth.at(word.at(3));
     float _five = weighted_fifth.at(word.at(4));
 
-    return weighted_word{
+    return weighted_word {
             word,
             std::pair<const char, float>(word.at(0), _one),
             std::pair<const char, float>(word.at(1), _two),
@@ -141,4 +157,10 @@ bool Analysis::compare(const weighted_word& lhs, const weighted_word& rhs) {
         return false;
     }
     return true;
+}
+
+bool test_letter(std::pair<char, State> pair, int index) {
+    if (pair.second == State::GREEN) {
+        return true;
+    }
 }

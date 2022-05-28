@@ -5,11 +5,11 @@
 #include <map>
 #include <vector>
 
- typedef struct State {
-    int GREEN = 0;
-    int YELLOW = 1;
-    int GREY = 2;
-} State;
+enum State {
+    GREEN,
+    YELLOW,
+    GREY,
+};
 
 struct weighted_word {
     std::string word;
