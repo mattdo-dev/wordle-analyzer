@@ -114,23 +114,23 @@ void Analysis::set_array_weight() {
     }
 }
 
-//void Analysis::test_word(std::pair<char, State> a, std::pair<char, State> b, std::pair<char, State> c,
-//                         std::pair<char, State> d, std::pair<char, State> e) {
-//
-//    bool filter;
-//
-//    if (a.second == State::GREEN) {
-//        if (weighted_words.at(0).first.first == a.first) {
-//            filter = filter && weighted_words. ;
-//        }
-//    } else if (a.second == State::YELLOW) {
-//        for (const weighted_word& w : weighted_words) {
-//            if (w.first.first == a.first) {
-//                filter = filter && a.first && ;
-//            }
-//        }
-//    }
-//}
+void Analysis::test_word(std::pair<char, State> a, std::pair<char, State> b, std::pair<char, State> c,
+                         std::pair<char, State> d, std::pair<char, State> e) {
+
+    bool filter;
+
+    if (a.second == State::GREEN) {
+        if (weighted_words.at(0).first.first == a.first) {
+            filter = filter && weighted_words. ;
+        }
+    } else if (a.second == State::YELLOW) {
+        for (const weighted_word& w : weighted_words) {
+            if (w.first.first == a.first) {
+                filter = filter && a.first && ;
+            }
+        }
+    }
+}
 
 weighted_word Analysis::generate_weighted_word(std::string word) {
     float _one = weighted_first.at(word.at(0));
