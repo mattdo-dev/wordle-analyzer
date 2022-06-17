@@ -52,7 +52,7 @@ public:
 
     void set_array_weight();
 
-    void test_word(std::pair<char, State> a, std::pair<char, State> b, std::pair<char, State> c, std::pair<char, State> d, std::pair<char, State>e);
+    void test_word(std::vector<std::pair<char, State>> pairs);
 
 private:
     std::map<char, float> calculate_weight(const std::map<const char, int> &map) const;

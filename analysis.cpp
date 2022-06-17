@@ -25,14 +25,6 @@ void Analysis::enter(std::string word) {
     fifth[word.at(4)]++;
 }
 
-std::map<char, float> Analysis::calculate_weight(const std::map<const char, int> &map) const {
-    std::map<char, float> weights;
-    for (auto const &x: map) {
-        weights.insert(std::pair<const char, float>(x.first, (float) x.second / (float) lines * 100));
-    }
-    return weights;
-}
-
 void Analysis::create_weights() {
     lines = words.size();
     auto one = [this](std::promise<std::map<char, float>> p) {
@@ -114,22 +106,34 @@ void Analysis::set_array_weight() {
     }
 }
 
-void Analysis::test_word(std::pair<char, State> a, std::pair<char, State> b, std::pair<char, State> c,
-                         std::pair<char, State> d, std::pair<char, State> e) {
+void Analysis::test_word(std::vector<std::pair<char, State>> pairs) {
 
-    bool filter;
+    if (pairs.size() != 5) {
+        throw std::invalid_argument("Size of vector needs to be of size 5.");
+    }
 
-    if (a.second == State::GREEN) {
-        if (weighted_words.at(0).first.first == a.first) {
-            filter = filter && weighted_words. ;
-        }
-    } else if (a.second == State::YELLOW) {
-        for (const weighted_word& w : weighted_words) {
-            if (w.first.first == a.first) {
-                filter = filter && a.first && ;
-            }
+    std::string greys;
+    char yellows[5] = {};
+    char greens[5] = {};
+
+    for (int i = 0; i < 5; i++) {
+        std::pair<char, State> pair = pairs.at(i);
+        if (pair.second == State::GREY) {
+            greys += pair.first;
+        } else if (pair.second == State::YELLOW) {
+            yellows[i] = pair.first;
+        } else if (pair.second == State::GREEN) {
+            greens[i] = pair.first;
         }
     }
+}
+
+std::map<char, float> Analysis::calculate_weight(const std::map<const char, int> &map) const {
+    std::map<char, float> weights;
+    for (auto const &x: map) {
+        weights.insert(std::pair<const char, float>(x.first, (float) x.second / (float) lines * 100));
+    }
+    return weights;
 }
 
 weighted_word Analysis::generate_weighted_word(std::string word) {
@@ -157,10 +161,4 @@ bool Analysis::compare(const weighted_word& lhs, const weighted_word& rhs) {
         return false;
     }
     return true;
-}
-
-bool test_letter(std::pair<char, State> pair, int index) {
-    if (pair.second == State::GREEN) {
-        return true;
-    }
 }
