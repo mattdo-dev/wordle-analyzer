@@ -60,6 +60,8 @@ private:
     weighted_word generate_weighted_word(std::string);
 
     static bool compare(const weighted_word& lhs, const weighted_word& rhs);
+
+    void display_weights();
 };
 
 

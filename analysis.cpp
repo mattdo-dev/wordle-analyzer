@@ -89,21 +89,6 @@ void Analysis::set_array_weight() {
     //  green squares: check only in current index
 
     std::sort(weighted_words.begin(), weighted_words.end(), &Analysis::compare);
-
-    // temporary for display purposes, wordle #338
-    // guesses: CRANE (personal), SNIDE, BINGE, HINGE
-    for (const weighted_word& ww: weighted_words) {
-        if (ww.first.first == 'c' && ww.second.first == 'r' && ww.fifth.first != 'e') {
-            std::cout << ww.word << ": "
-                      << ww.first.first << ": " << ww.first.second << ", "
-                      << ww.second.first << ": " << ww.second.second << ", "
-                      << ww.third.first << ": " << ww.third.second << ", "
-                      << ww.fourth.first << ": " << ww.fourth.second << ", "
-                      << ww.fifth.first << ": " << ww.fifth.second << ", "
-                      << "weight: " << ww.linear << ", " << "\n";
-
-        }
-    }
 }
 
 void Analysis::test_word(std::vector<std::pair<char, State>> pairs) {
@@ -115,6 +100,7 @@ void Analysis::test_word(std::vector<std::pair<char, State>> pairs) {
     std::string greys;
     char yellows[5] = {};
     char greens[5] = {};
+    std::vector<weighted_word> new_list;
 
     for (int i = 0; i < 5; i++) {
         std::pair<char, State> pair = pairs.at(i);
@@ -126,6 +112,39 @@ void Analysis::test_word(std::vector<std::pair<char, State>> pairs) {
             greens[i] = pair.first;
         }
     }
+
+    std::cout << greys << "\n";
+    for(char yellow : yellows)
+    {
+        std::cout << yellow << ' ';
+    }
+
+    for(char green : greens)
+    {
+        std::cout << green << ' ';
+    }
+
+    for (const weighted_word& w: weighted_words) {
+
+        if (!greys.find(w.first.first) ||
+            !greys.find(w.second.first) ||
+            !greys.find(w.third.first) ||
+            !greys.find(w.fourth.first) ||
+            !greys.find(w.fifth.first))
+        {
+            for (int i = 0; i < 5; i++) {
+                if (greens[i] != 0 && greens[i] == pairs.at(i).first) {
+                    if (yellows[i] != 0 && yellows[i] != pairs.at(i).first) {
+                        new_list.push_back(w);
+                    }
+                }
+            }
+        }
+    }
+
+    weighted_words = new_list;
+
+    Analysis::display_weights();
 }
 
 std::map<char, float> Analysis::calculate_weight(const std::map<const char, int> &map) const {
@@ -161,4 +180,16 @@ bool Analysis::compare(const weighted_word& lhs, const weighted_word& rhs) {
         return false;
     }
     return true;
+}
+
+void Analysis::display_weights() {
+    for (const weighted_word& w: weighted_words) {
+        std::cout << w.word << ": "
+                  << w.first.first << ": " << w.first.second << ", "
+                  << w.second.first << ": " << w.second.second << ", "
+                  << w.third.first << ": " << w.third.second << ", "
+                  << w.fourth.first << ": " << w.fourth.second << ", "
+                  << w.fifth.first << ": " << w.fifth.second << ", "
+                  << "weight: " << w.linear << ", " << "\n";
+    }
 }

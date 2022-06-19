@@ -23,6 +23,32 @@ int main() {
         analysis.create_weights();
         analysis.set_array_weight();
 
+        std::vector<std::pair<char, State>> test;
+
+        std::pair<char, State> one;
+        one.first = 'D';
+        one.second = State::GREY;
+        std::pair<char, State> two;
+        two.first = 'E';
+        two.second = State::YELLOW;
+        std::pair<char, State> thr;
+        thr.first = 'A';
+        thr.second = State::GREY;
+        std::pair<char, State> fou;
+        fou.first = 'L';
+        fou.second = State::YELLOW;
+        std::pair<char, State> fiv;
+        fiv.first = 'T';
+        fiv.second = State::GREY;
+
+        test.push_back(one);
+        test.push_back(two);
+        test.push_back(thr);
+        test.push_back(fou);
+        test.push_back(fiv);
+
+        analysis.test_word(test);
+
     } catch (const std::ifstream::failure &failure) {
         std::cout << failure.what() << "\n";
     }
