@@ -26,19 +26,19 @@ int main() {
         std::vector<std::pair<char, State>> test;
 
         std::pair<char, State> one;
-        one.first = 'D';
+        one.first = 'd';
         one.second = State::GREY;
         std::pair<char, State> two;
-        two.first = 'E';
+        two.first = 'e';
         two.second = State::YELLOW;
         std::pair<char, State> thr;
-        thr.first = 'A';
+        thr.first = 'a';
         thr.second = State::GREY;
         std::pair<char, State> fou;
-        fou.first = 'L';
+        fou.first = 'l';
         fou.second = State::YELLOW;
         std::pair<char, State> fiv;
-        fiv.first = 'T';
+        fiv.first = 't';
         fiv.second = State::GREY;
 
         test.push_back(one);

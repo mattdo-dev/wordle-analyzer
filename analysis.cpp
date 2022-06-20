@@ -133,8 +133,10 @@ void Analysis::test_word(std::vector<std::pair<char, State>> pairs) {
             !greys.find(w.fifth.first))
         {
             for (int i = 0; i < 5; i++) {
-                if (greens[i] != 0 && greens[i] == pairs.at(i).first) {
-                    if (yellows[i] != 0 && yellows[i] != pairs.at(i).first) {
+                if (yellows[i] != pairs.at(i).first) {
+                    new_list.push_back(w);
+                    break;
+                    if (greens[i] == pairs.at(i).first) {
                         new_list.push_back(w);
                     }
                 }
