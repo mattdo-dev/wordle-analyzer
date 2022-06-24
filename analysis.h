@@ -58,9 +58,9 @@ private:
 
     weighted_word generate_weighted_word(std::string);
 
-    static bool compare(const weighted_word& lhs, const weighted_word& rhs);
+    void display_weights();
 
-    static void display_weights(const std::vector<weighted_word>& words);
+    static bool compare(const weighted_word& lhs, const weighted_word& rhs);
 
     static std::string exclude(const std::string& init, char c);
 };

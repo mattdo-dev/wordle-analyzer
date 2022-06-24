@@ -24,9 +24,13 @@ int main() {
         analysis.set_array_weight();
 
         std::string in;
-        std::cin >> in;
 
-        analysis.test_word(Analysis::enter_word(in));
+        for (int i = 0; i < 5; i++) {
+            std::cout << "Enter word: ";
+            std::cin >> in;
+            std::vector<std::pair<char, State>> pairs = Analysis::enter_word(in);
+            analysis.test_word(pairs);
+        }
 
     } catch (const std::ifstream::failure &failure) {
         std::cout << failure.what() << "\n";

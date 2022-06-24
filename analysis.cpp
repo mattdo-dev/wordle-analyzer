@@ -93,8 +93,7 @@ void Analysis::test_word(std::vector<std::pair<char, State>> pairs) {
     }
 
     std::string greys;
-    char yellows[5] = {};
-    char greens[5] = {};
+    std::string yellows;
     std::vector<weighted_word> new_list;
 
     for (int i = 0; i < 5; i++) {
@@ -102,29 +101,32 @@ void Analysis::test_word(std::vector<std::pair<char, State>> pairs) {
         if (pair.second == State::GREY) {
             greys += pair.first;
         } else if (pair.second == State::YELLOW) {
-            yellows[i] = pair.first;
-        } else if (pair.second == State::GREEN) {
-            greens[i] = pair.first;
+            yellows += pair.first;
         }
     }
 
     std::string regex_expr = "^";
 
+    if (!yellows.empty()) {
+        regex_expr += "(?=.*[";
+        regex_expr += yellows;
+        regex_expr += "])";
+    }
+
     for (int i = 0; i < 5; i++) {
         if (pairs.at(i).second == State::GREEN) {
             regex_expr += pairs.at(i).first;
-            regex_expr += '?';
         }
 
         if (pairs.at(i).second == State::YELLOW) {
             regex_expr += exclude(greys, pairs.at(i).first);
+            regex_expr += "{1}";
         }
 
         if (pairs.at(i).second == State::GREY) {
             regex_expr += exclude(greys, '\0');
+            regex_expr += "{1}";
         }
-
-        regex_expr += "{1}";
     }
 
     regex_expr += '$';
@@ -137,9 +139,10 @@ void Analysis::test_word(std::vector<std::pair<char, State>> pairs) {
         }
     }
 
-    Analysis::display_weights(new_list);
+    weighted_words = std::move(new_list);
+    Analysis::display_weights();
     std::cout << "regexp: " << regex_expr << std::endl;
-    std::cout << "No. remaining words: " << new_list.size() << std::endl;
+    std::cout << "No. remaining words: " << weighted_words.size() << std::endl;
 }
 
 std::vector<std::pair<char, State>> Analysis::enter_word(std::string args) {
@@ -202,16 +205,14 @@ weighted_word Analysis::generate_weighted_word(std::string word) {
 }
 
 bool Analysis::compare(const weighted_word& lhs, const weighted_word& rhs) {
-    // Bottoms up
     if (lhs.linear > rhs.linear) {
         return false;
     }
     return true;
 }
 
-void Analysis::display_weights(const std::vector<weighted_word>& words) {
-    for (const weighted_word& w: words) {
-        // print all the contents of w
+void Analysis::display_weights() {
+    for (weighted_word w: weighted_words) {
         std::cout << w.word << ": ";
         for (int i = 0; i < 5; i++) {
             std::cout << w.weights.at(i).first << ": " << w.weights.at(i).second << "; ";
