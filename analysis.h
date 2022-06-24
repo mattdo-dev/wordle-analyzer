@@ -3,6 +3,7 @@
 
 
 #include <map>
+#include <regex>
 #include <vector>
 
 enum State {
@@ -13,11 +14,7 @@ enum State {
 
 struct weighted_word {
     std::string word;
-    std::pair<char, float> first;
-    std::pair<char, float> second;
-    std::pair<char, float> third;
-    std::pair<char, float> fourth;
-    std::pair<char, float> fifth;
+    std::vector<std::pair<const char, float>> weights;
     float linear;
     float complex;
 };
@@ -52,6 +49,8 @@ public:
 
     void set_array_weight();
 
+    static std::vector<std::pair<char, State>> enter_word();
+
     void test_word(std::vector<std::pair<char, State>> pairs);
 
 private:
@@ -61,7 +60,9 @@ private:
 
     static bool compare(const weighted_word& lhs, const weighted_word& rhs);
 
-    void display_weights();
+    static void display_weights(const std::vector<weighted_word>& words);
+
+    std::string exclude_factory(const std::string& init, char c);
 };
 
 
