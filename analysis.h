@@ -62,7 +62,7 @@ private:
 
     static void display_weights(const std::vector<weighted_word>& words);
 
-    std::string exclude_factory(const std::string& init, char c);
+    static std::string exclude(const std::string& init, char c);
 };
 
 

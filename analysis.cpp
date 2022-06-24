@@ -1,6 +1,5 @@
 #include <algorithm>
 #include <iostream>
-#include <iomanip>
 #include <thread>
 #include <future>
 #include <regex>
@@ -83,13 +82,7 @@ void Analysis::set_array_weight() {
         weighted_words.push_back(generate_weighted_word(word));
     }
 
-    // TODO:
-    //  filter, generate new weights(?) for each check iteration
-    //  grey squares: exclude word entirely
-    //  yellow squares: exclude in current index
-    //  green squares: check only in current index
-
-    std::sort(weighted_words.begin(), weighted_words.end(), &Analysis::compare);
+    std::sort(weighted_words.begin(), weighted_words.end(), compare);
 }
 
 void Analysis::test_word(std::vector<std::pair<char, State>> pairs) {
@@ -114,8 +107,6 @@ void Analysis::test_word(std::vector<std::pair<char, State>> pairs) {
         }
     }
 
-    std::cout << "greys: " << greys << std::endl;
-
     std::string regex_expr = "^";
 
     for (int i = 0; i < 5; i++) {
@@ -125,11 +116,11 @@ void Analysis::test_word(std::vector<std::pair<char, State>> pairs) {
         }
 
         if (pairs.at(i).second == State::YELLOW) {
-            regex_expr += exclude_factory(greys, pairs.at(i).first);
+            regex_expr += exclude(greys, pairs.at(i).first);
         }
 
         if (pairs.at(i).second == State::GREY) {
-            regex_expr += exclude_factory(greys, '\0');
+            regex_expr += exclude(greys, '\0');
         }
 
         regex_expr += "{1}";
@@ -146,6 +137,7 @@ void Analysis::test_word(std::vector<std::pair<char, State>> pairs) {
     }
 
     Analysis::display_weights(new_list);
+    std::cout << "regexp: " << regex_expr << std::endl;
     std::cout << "No. remaining words: " << new_list.size() << std::endl;
 }
 
@@ -208,7 +200,7 @@ weighted_word Analysis::generate_weighted_word(std::string word) {
 }
 
 bool Analysis::compare(const weighted_word& lhs, const weighted_word& rhs) {
-    // Highest first
+    // Bottoms up
     if (lhs.linear > rhs.linear) {
         return false;
     }
@@ -226,7 +218,7 @@ void Analysis::display_weights(const std::vector<weighted_word>& words) {
     }
 }
 
-std::string Analysis::exclude_factory(const std::string& init, char c) {
+std::string Analysis::exclude(const std::string& init, char c) {
     std::stringstream s;
     if (c == '\0') {
         s << "[^" << init << "]";
