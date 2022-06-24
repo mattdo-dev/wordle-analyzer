@@ -3,6 +3,7 @@
 #include <thread>
 #include <future>
 #include <regex>
+#include <utility>
 #include <vector>
 #include "analysis.h"
 
@@ -142,24 +143,25 @@ void Analysis::test_word(std::vector<std::pair<char, State>> pairs) {
 }
 
 std::vector<std::pair<char, State>> Analysis::enter_word(std::string args) {
-    //TODO fix
-    std::replace(args.begin(), args.end(), ';', '\0');
-    std::vector<std::string> words;
-    std::stringstream ss(args);
-    int temp;
-    while (ss >> temp) {
-        words.push_back(std::to_string(temp));
+    std::string arg = std::move(args);
+    std::replace(arg.begin(), arg.end(), ';', ' ');
+    std::string buffer;
+    std::stringstream ss(arg);
+    std::vector<std::string> tokens;
+
+    while (ss >> buffer) {
+        tokens.push_back(buffer);
     }
 
     std::vector<std::pair<char, State>> pairs;
 
     for (int i = 0; i < 5; i++) {
-        if (std::regex_match(words.at(i), std::regex(":(n|grey)"))) {
-            pairs.emplace_back(words.at(i).at(0), State::GREY);
-        } else if (std::regex_match(words.at(i), std::regex(":(y|yellow)"))) {
-            pairs.emplace_back(words.at(i).at(0), State::YELLOW);
-        } else if (std::regex_match(words.at(i), std::regex(":(g|green)"))) {
-            pairs.emplace_back(words.at(i).at(0), State::GREEN);
+        if (std::regex_match(tokens.at(i), std::regex(".:(n|grey)"))) {
+            pairs.emplace_back(tokens.at(i).at(0), State::GREY);
+        } else if (std::regex_match(tokens.at(i), std::regex(".:(y|yellow)"))) {
+            pairs.emplace_back(tokens.at(i).at(0), State::YELLOW);
+        } else if (std::regex_match(tokens.at(i), std::regex(".:(g|green)"))) {
+            pairs.emplace_back(tokens.at(i).at(0), State::GREEN);
         } else {
             throw std::invalid_argument("Invalid input.");
         }
