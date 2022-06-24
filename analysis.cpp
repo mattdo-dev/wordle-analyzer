@@ -7,6 +7,9 @@
 #include <vector>
 #include "analysis.h"
 
+//TODO: better functionality and UI construction.
+//TODO: optimization, probably threading where possible
+
 Analysis::Analysis() {
     for (char c: ALPHABET) {
         first.insert(std::pair<const char, int>(c, 0));
