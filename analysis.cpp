@@ -211,16 +211,6 @@ bool Analysis::compare(const weighted_word& lhs, const weighted_word& rhs) {
     return true;
 }
 
-void Analysis::display_weights() {
-    for (weighted_word w: weighted_words) {
-        std::cout << w.word << ": ";
-        for (int i = 0; i < 5; i++) {
-            std::cout << w.weights.at(i).first << ": " << w.weights.at(i).second << "; ";
-        }
-        std::cout << "score: " << w.linear << "\n";
-    }
-}
-
 std::string Analysis::exclude(const std::string& init, char c) {
     std::stringstream s;
     if (c == '\0') {
@@ -229,4 +219,14 @@ std::string Analysis::exclude(const std::string& init, char c) {
         s << "[^" << init << c << "]";
     }
     return s.str();
+}
+
+void Analysis::display_weights() {
+    for (weighted_word w: weighted_words) {
+        std::cout << w.word << ": ";
+        for (int i = 0; i < 5; i++) {
+            std::cout << w.weights.at(i).first << ": " << w.weights.at(i).second << "; ";
+        }
+        std::cout << "score: " << w.linear << "\n";
+    }
 }
