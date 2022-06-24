@@ -23,8 +23,10 @@ int main() {
         analysis.create_weights();
         analysis.set_array_weight();
 
-        std::vector<std::pair<char, State>> test;
-        analysis.test_word(Analysis::enter_word());
+        std::string in;
+        std::cin >> in;
+
+        analysis.test_word(Analysis::enter_word(in));
 
     } catch (const std::ifstream::failure &failure) {
         std::cout << failure.what() << "\n";

@@ -141,27 +141,27 @@ void Analysis::test_word(std::vector<std::pair<char, State>> pairs) {
     std::cout << "No. remaining words: " << new_list.size() << std::endl;
 }
 
-std::vector<std::pair<char, State>> Analysis::enter_word() {
+std::vector<std::pair<char, State>> Analysis::enter_word(std::string args) {
+    //TODO fix
+    std::replace(args.begin(), args.end(), ';', '\0');
+    std::vector<std::string> words;
+    std::stringstream ss(args);
+    int temp;
+    while (ss >> temp) {
+        words.push_back(std::to_string(temp));
+    }
 
     std::vector<std::pair<char, State>> pairs;
 
     for (int i = 0; i < 5; i++) {
-        char c;
-        std::string state;
-
-        std::cout << "Enter character " << i + 1 << ": ";
-        std::cin >> c;
-        std::cout << "Enter color of " << c << ": ";
-        std::cin >> state;
-
-        if (state == "green" || state == "g") {
-            pairs.emplace_back(c, State::GREEN);
-        } else if (state == "yellow" || state == "y") {
-            pairs.emplace_back(c, State::YELLOW);
-        } else if (state == "grey" || state == "n") {
-            pairs.emplace_back(c, State::GREY);
+        if (std::regex_match(words.at(i), std::regex(":(n|grey)"))) {
+            pairs.emplace_back(words.at(i).at(0), State::GREY);
+        } else if (std::regex_match(words.at(i), std::regex(":(y|yellow)"))) {
+            pairs.emplace_back(words.at(i).at(0), State::YELLOW);
+        } else if (std::regex_match(words.at(i), std::regex(":(g|green)"))) {
+            pairs.emplace_back(words.at(i).at(0), State::GREEN);
         } else {
-            throw std::invalid_argument("Invalid color.");
+            throw std::invalid_argument("Invalid input.");
         }
     }
 

@@ -49,7 +49,7 @@ public:
 
     void set_array_weight();
 
-    static std::vector<std::pair<char, State>> enter_word();
+    static std::vector<std::pair<char, State>> enter_word(std::string args);
 
     void test_word(std::vector<std::pair<char, State>> pairs);
 
