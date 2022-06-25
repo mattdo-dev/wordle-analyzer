@@ -92,7 +92,7 @@ void Analysis::set_array_weight() {
 void Analysis::test_word(std::vector<std::pair<char, State>> pairs) {
 
     if (pairs.size() != 5) {
-        throw std::invalid_argument("Size of vector needs to be of size 5.");
+        throw std::invalid_argument("Size of vector needs to be 5.");
     }
 
     std::string greys;
@@ -108,12 +108,10 @@ void Analysis::test_word(std::vector<std::pair<char, State>> pairs) {
         }
     }
 
-    std::string regex_expr = "^";
+    std::string regex_expr;
 
     if (!yellows.empty()) {
-        regex_expr += "(?=.*[";
-        regex_expr += yellows;
-        regex_expr += "])";
+        regex_expr += "(?=.*[" + yellows + "])";
     }
 
     for (int i = 0; i < 5; i++) {
@@ -123,18 +121,14 @@ void Analysis::test_word(std::vector<std::pair<char, State>> pairs) {
 
         if (pairs.at(i).second == State::YELLOW) {
             regex_expr += exclude(greys, pairs.at(i).first);
-            regex_expr += "{1}";
         }
 
         if (pairs.at(i).second == State::GREY) {
             regex_expr += exclude(greys, '\0');
-            regex_expr += "{1}";
         }
     }
 
-    regex_expr += '$';
-
-    std::regex regex(regex_expr, std::regex::icase);
+    std::regex regex(regex_expr, std::regex::ECMAScript | std::regex::icase);
 
     for (const weighted_word &word: weighted_words) {
         if (std::regex_match(word.word, regex)) {
@@ -215,13 +209,14 @@ bool Analysis::compare(const weighted_word& lhs, const weighted_word& rhs) {
 }
 
 std::string Analysis::exclude(const std::string& init, char c) {
-    std::stringstream s;
+    std::string s;
     if (c == '\0') {
-        s << "[^" << init << "]";
+        s += "[^" + init + "]";
     } else {
-        s << "[^" << init << c << "]";
+        s += "[^" + init + c + "]";
     }
-    return s.str();
+
+    return s;
 }
 
 void Analysis::display_weights() {
