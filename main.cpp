@@ -5,8 +5,7 @@
 
 std::istream& sanitize_getline(std::istream& is, std::string& t){
     t.clear();
-    
-    std::istream::sentry se(is, true);
+
     std::streambuf* sb = is.rdbuf();
 
     for(;;) {
@@ -19,18 +18,17 @@ std::istream& sanitize_getline(std::istream& is, std::string& t){
                     sb->sbumpc();
                 return is;
             case std::streambuf::traits_type::eof():
-                // Also handle the case when the last line has no line ending
                 if(t.empty())
                     is.setstate(std::ios::eofbit);
                 return is;
             default:
-                t += (char)c;
+                t += (char) c;
         }
     }
 }
 
 int main() {
-    std::string dir = R"(../words.txt)";
+    std::string dir = "(../words.txt)";
     std::ifstream file;
     Analysis analysis = Analysis();
 
