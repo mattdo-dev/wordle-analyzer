@@ -111,7 +111,11 @@ void Analysis::test_word(std::vector<std::pair<char, State>> pairs) {
     std::string regex_expr;
 
     if (!yellows.empty()) {
-        regex_expr += "(?=.*[" + yellows + "])";
+        for (char c : yellows) {
+            regex_expr += "(?=.*[";
+            regex_expr += c;
+            regex_expr += "])";
+        }
     }
 
     for (int i = 0; i < 5; i++) {

@@ -28,7 +28,7 @@ std::istream& sanitize_getline(std::istream& is, std::string& t){
 }
 
 int main() {
-    std::string dir = "(../words.txt)";
+    std::string dir = "../words.txt";
     std::ifstream file;
     Analysis analysis = Analysis();
 
