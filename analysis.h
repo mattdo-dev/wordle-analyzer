@@ -1,7 +1,6 @@
 #ifndef UNTITLED_ANALYSIS_H
 #define UNTITLED_ANALYSIS_H
 
-
 #include <map>
 #include <regex>
 #include <vector>
@@ -41,19 +40,21 @@ private:
     std::vector<weighted_word> weighted_words;
 
 public:
-    Analysis();
+    explicit Analysis(const std::string& file_name);
 
-    void enter(std::string str);
-
-    void create_weights();
-
-    void set_array_weight();
+    void start();
 
     static std::vector<std::pair<char, State>> enter_word(std::string args);
 
     void test_word(std::vector<std::pair<char, State>> pairs);
 
 private:
+    void enter(std::string str);
+
+    void create_weights();
+
+    void set_array_weight();
+
     std::map<char, float> calculate_weight(const std::map<const char, int> &map) const;
 
     weighted_word generate_weighted_word(std::string);

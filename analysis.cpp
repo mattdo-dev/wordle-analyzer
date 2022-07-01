@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <fstream>
 #include <iostream>
 #include <thread>
 #include <future>
@@ -10,7 +11,58 @@
 //TODO: better functionality and UI construction.
 //TODO: optimization, probably threading where possible
 
-Analysis::Analysis() {
+std::istream& sanitize_getline(std::istream& is, std::string& t){
+    t.clear();
+
+    std::streambuf* sb = is.rdbuf();
+
+    for(;;) {
+        int c = sb->sbumpc();
+        switch (c) {
+            case '\n':
+                return is;
+            case '\r':
+                if(sb->sgetc() == '\n')
+                    sb->sbumpc();
+                return is;
+            case std::streambuf::traits_type::eof():
+                if(t.empty())
+                    is.setstate(std::ios::eofbit);
+                return is;
+            default:
+                t += (char) c;
+        }
+    }
+}
+
+Analysis::Analysis(const std::string& file_name) {
+    std::ifstream file;
+
+    try {
+        file.open(file_name.c_str(), std::ios::in);
+
+        if (file.is_open()) {
+            std::string word;
+            // be sure to deal with universal file handling, i.e. \r, \n, the like
+            while (!sanitize_getline(file, word).eof()) {
+                this->enter(word);
+            }
+        } else {
+            std::cout << "Could not open file" << std::endl;
+            throw std::runtime_error("Could not open file");
+        }
+
+        file.close();
+
+        this->create_weights();
+        this->set_array_weight();
+
+        std::string in;
+
+    } catch (const std::ifstream::failure &failure) {
+        std::cout << failure.what() << "\n";
+    }
+
     for (char c: ALPHABET) {
         first.insert(std::pair<const char, int>(c, 0));
         second = first;
@@ -18,6 +70,14 @@ Analysis::Analysis() {
         fourth = first;
         fifth = first;
     }
+}
+
+void Analysis::start() {
+    std::string in;
+    std::cout << "Enter a word: ";
+    std::getline(std::cin, in);
+    std::vector<std::pair<char, State>> pairs = enter_word(in);
+    this->test_word(pairs);
 }
 
 void Analysis::enter(std::string word) {
