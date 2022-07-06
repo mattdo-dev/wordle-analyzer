@@ -5,17 +5,16 @@
 #include <regex>
 #include <vector>
 
+struct weighted_word {
+    std::string word;
+    std::vector<std::pair<const char, float>> weights;
+    double linear;
+};
+
 enum State {
     GREEN,
     YELLOW,
     GREY,
-};
-
-struct weighted_word {
-    std::string word;
-    std::vector<std::pair<const char, float>> weights;
-    float linear;
-    float complex;
 };
 
 class Analysis {
@@ -42,11 +41,11 @@ private:
 public:
     explicit Analysis(const std::string& file_name);
 
-    void start();
-
     static std::vector<std::pair<char, State>> enter_word(std::string args);
 
     void test_word(std::vector<std::pair<char, State>> pairs);
+
+    void start();
 
 private:
     void enter(std::string str);
@@ -64,6 +63,7 @@ private:
     static bool compare(const weighted_word& lhs, const weighted_word& rhs);
 
     static std::string exclude(const std::string& init, char c);
+
 };
 
 

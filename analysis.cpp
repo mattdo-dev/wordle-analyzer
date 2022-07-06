@@ -54,10 +54,7 @@ Analysis::Analysis(const std::string& file_name) {
 
         file.close();
 
-        this->create_weights();
-        this->set_array_weight();
-
-        std::string in;
+        this->start();
 
     } catch (const std::ifstream::failure &failure) {
         std::cout << failure.what() << "\n";
@@ -73,11 +70,16 @@ Analysis::Analysis(const std::string& file_name) {
 }
 
 void Analysis::start() {
-    std::string in;
-    std::cout << "Enter a word: ";
-    std::getline(std::cin, in);
-    std::vector<std::pair<char, State>> pairs = enter_word(in);
-    this->test_word(pairs);
+    this->create_weights();
+    this->set_array_weight();
+
+    for (int i = 0; i < 6; i++) {
+        std::string in;
+        std::cout << "Make an entry: ";
+        std::getline(std::cin, in);
+        std::vector<std::pair<char, State>> pairs = enter_word(in);
+        this->test_word(pairs);
+    }
 }
 
 void Analysis::enter(std::string word) {
@@ -261,7 +263,6 @@ weighted_word Analysis::generate_weighted_word(std::string word) {
             word,
             weights,
             _one + _two + _three + _four + _five,
-            (_one * _two) / 2 + (_two * _three) / 3 + (_three + _four) / 3 * (_four + _five) / 2,
     };
 }
 

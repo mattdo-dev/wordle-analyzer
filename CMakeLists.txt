@@ -8,4 +8,5 @@ add_executable(wordle-analyzer
         main.cpp
         analysis.cpp
         analysis.h
-        )
+        process.h
+        process.cpp process.h)
