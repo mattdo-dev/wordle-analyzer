@@ -73,12 +73,16 @@ void Analysis::start() {
     this->create_weights();
     this->set_array_weight();
 
-    for (int i = 0; i < 6; i++) {
-        std::string in;
-        std::cout << "Make an entry: ";
-        std::getline(std::cin, in);
-        std::vector<std::pair<char, State>> pairs = enter_word(in);
-        this->test_word(pairs);
+    for (;;) {
+        try {
+            std::cout << "Enter a word: ";
+            std::string word;
+            std::cin >> word;
+            std::vector<std::pair<char, State>> pairs = enter_word(word);
+            this->test_word(pairs);
+        } catch (std::invalid_argument &e) {
+            continue;
+        }
     }
 }
 
@@ -209,6 +213,11 @@ void Analysis::test_word(std::vector<std::pair<char, State>> pairs) {
 }
 
 std::vector<std::pair<char, State>> Analysis::enter_word(std::string args) {
+    if (args == "finish") {
+        std::cout << "Finished.\n";
+        std::exit(0);
+    }
+
     std::string arg = std::move(args);
     std::replace(arg.begin(), arg.end(), ';', ' ');
     std::string buffer;
