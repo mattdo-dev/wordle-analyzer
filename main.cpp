@@ -1,11 +1,10 @@
 #include <iostream>
 
-#include "analysis.h"
+#include "threaded_analysis.h"
 
 int main() {
     std::string dir = "../words.txt";
-    Analysis analysis = Analysis(dir);
-    analysis.start();
-
+    threaded_analysis analysis = threaded_analysis(dir);
+    analysis.random();
     return 0;
 }

@@ -6,7 +6,4 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -static-libstdc++")
 
 add_executable(wordle-analyzer
         main.cpp
-        analysis.cpp
-        analysis.h
-        process.h
-        process.cpp process.h)
+        threaded_analysis.cpp threaded_analysis.h fast_read.h fast_read.cpp)
