@@ -36,7 +36,7 @@ public:
             }
             std::string line;
             while (!sanitize_getline(file, line).eof()) {
-                this->insert_into_chunk(line);
+                words.push_back(line);
             }
         } catch (std::exception& e) {
             std::cerr << e.what() << std::endl;
@@ -50,6 +50,11 @@ public:
                 std::string word;
                 std::cin >> word;
                 word_state pairs = enter_word(word);
+                generate_regex(pairs);
+
+
+            } catch (std::exception& e) {
+                std::cerr << e.what() << std::endl;
             }
         }
     }
@@ -61,15 +66,16 @@ private:
     unsigned int lines = 2309;
     unsigned int blocks = std::ceil(lines / threads);
 
-    std::unordered_set<std::string> greys;
-    std::unordered_set<std::string> yellows;
+    std::string greys;
+    std::string yellows;
+    std::string regex_expr;
 
-    std::vector<std::vector<std::string>> chunks;
+    std::vector<std::string> words;
 
     std::mutex mtx;
     std::condition_variable cv;
 
-    word_state enter_word(std::string word) {
+    static word_state enter_word(std::string word) {
         if (word == "exit") {
             exit(0);
         }
@@ -101,31 +107,72 @@ private:
         return pairs;
     }
 
-    void insert_into_chunk(std::string word) {
-        for (auto& chunk : chunks) {
-            if (chunk.size() < blocks) {
-                chunk.push_back(word);
-                return;
+    void generate_regex(word_state word) {
+        std::string generated_regex;
+
+        for (auto& pair : word) {
+            if (pair.second == State::GREY && greys.find(pair.first) == std::string::npos) {
+                greys += pair.first;
+            } else if (pair.second == State::YELLOW && yellows.find(pair.first) == std::string::npos) {
+                yellows += pair.first;
             }
         }
-        chunks.push_back({word});
+
+        if (!yellows.empty()) {
+            for (char c : yellows) {
+                generated_regex += "(?=.*[";
+                generated_regex += c;
+                generated_regex += "])";
+            }
+        }
+
+        for (int i = 0; i < 5; i++) {
+            if (word.at(i).second == State::GREEN) {
+                generated_regex += word[i].first;
+                continue;
+            } else if (word.at(i).second == State::YELLOW) {
+                generated_regex += exclude(greys, word[i].first);
+                continue;
+            } else if (word.at(i).second == State::GREY) {
+                generated_regex += exclude(greys, '\0');
+            }
+        }
+
+        regex_expr = generated_regex;
+    }
+
+    static std::string exclude(std::string& letters, char compare) {
+        std::string s;
+
+        if (compare == '\0') {
+            s += "[^" + letters + "]";
+        } else {
+            s += "[^" + letters + compare + "]";
+        }
+
+        return s;
     }
 
     // TODO: idea is to merge the chunks into one vector.
-    void guessers(word_state& word, std::vector<std::string>& chunk, int index) {
+    void guessers(word_state& pairs, int index) {
         while (true) {
             std::unique_lock<std::mutex> lock(mtx);
-            cv.wait(lock, [&] { return !chunk.empty() || complete; });
+            cv.wait(lock, [&] { return complete; });
+
             if (complete) {
                 return;
             }
 
+            workers++;
+
             lock.unlock();
             std::vector<std::string> good_words;
 
-
-
-            workers++;
+            for (int i = index; i < index + blocks; i++) {
+                if (std::regex_match(words.at(i), std::regex(regex_expr))) {
+                    good_words.push_back(words.at(i));
+                }
+            }
 
             workers--;
             lock.unlock();
@@ -134,10 +181,6 @@ private:
                 complete = true;
             cv.notify_all();
         }
-    }
-
-    bool check_word(std::string& to_test) {
-
     }
 };
 
