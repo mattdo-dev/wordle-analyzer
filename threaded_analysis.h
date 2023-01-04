@@ -154,7 +154,7 @@ private:
     }
 
     // TODO: idea is to merge the chunks into one vector.
-    void guessers(word_state& pairs, int index) {
+    void guessers(std::string rgx, int index) {
         while (true) {
             std::unique_lock<std::mutex> lock(mtx);
             cv.wait(lock, [&] { return complete; });
@@ -166,11 +166,12 @@ private:
             workers++;
 
             lock.unlock();
-            std::vector<std::string> good_words;
 
-            for (int i = index; i < index + blocks; i++) {
-                if (std::regex_match(words.at(i), std::regex(regex_expr))) {
-                    good_words.push_back(words.at(i));
+            std::vector<std::string> good_words;
+            std::regex regex(rgx, std::regex::ECMAScript | std::regex::icase);
+            for (int i = index; i < index + blocks && i < words.size(); i++) {
+                if (std::regex_match(words[i], regex)) {
+                    good_words.push_back(words[i]);
                 }
             }
 
