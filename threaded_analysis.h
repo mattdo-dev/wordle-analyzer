@@ -51,8 +51,15 @@ public:
                 std::cin >> word;
                 word_state pairs = enter_word(word);
                 generate_regex(pairs);
+                temp.clear();
+                for (int i = 0; i < threads; i++) {
+                    guessers_threads.emplace_back(&threaded_analysis::guessers, this, i * blocks);
+                }
 
-
+                for (auto &thread : guessers_threads) {
+                    thread.join();
+                }
+                guessers_threads.clear();
             } catch (std::exception& e) {
                 std::cerr << e.what() << std::endl;
             }
@@ -71,9 +78,11 @@ private:
     std::string regex_expr;
 
     std::vector<std::string> words;
+    std::vector<std::string> temp;
 
     std::mutex mtx;
     std::condition_variable cv;
+    std::vector<std::thread> guessers_threads;
 
     static word_state enter_word(std::string word) {
         if (word == "exit") {
@@ -154,7 +163,7 @@ private:
     }
 
     // TODO: idea is to merge the chunks into one vector.
-    void guessers(std::string rgx, int index) {
+    void guessers(int index) {
         while (true) {
             std::unique_lock<std::mutex> lock(mtx);
             cv.wait(lock, [&] { return complete; });
@@ -168,14 +177,18 @@ private:
             lock.unlock();
 
             std::vector<std::string> good_words;
-            std::regex regex(rgx, std::regex::ECMAScript | std::regex::icase);
+            std::regex regex(regex_expr, std::regex::ECMAScript | std::regex::icase);
             for (int i = index; i < index + blocks && i < words.size(); i++) {
                 if (std::regex_match(words[i], regex)) {
                     good_words.push_back(words[i]);
                 }
             }
 
+            lock.lock();
+
+            temp.insert(temp.end(), good_words.begin(), good_words.end());
             workers--;
+
             lock.unlock();
 
             if (workers == 0)
