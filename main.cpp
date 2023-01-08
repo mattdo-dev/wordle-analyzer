@@ -4,7 +4,7 @@
 
 int main() {
     std::string dir = "../words.txt";
-    threaded_analysis analysis = threaded_analysis(dir);
-    analysis.random();
+    threaded_analysis analysis(dir);
+    analysis.start();
     return 0;
 }

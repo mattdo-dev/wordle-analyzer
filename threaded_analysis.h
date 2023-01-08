@@ -26,9 +26,10 @@ enum State {
 
 
 class threaded_analysis {
+
     typedef std::vector<std::pair<char, State>> word_state;
 public:
-    explicit threaded_analysis(const std::string& file_name) {
+    explicit threaded_analysis(const std::string &file_name) {
         try {
             std::ifstream file(file_name);
             if (!file.is_open()) {
@@ -41,24 +42,30 @@ public:
         } catch (std::exception& e) {
             std::cerr << e.what() << std::endl;
         }
-    }
+    };
 
     void start() {
         for(;;) {
             try {
+                temp.clear();
                 std::cout << "Enter a word to search for: ";
                 std::string word;
                 std::cin >> word;
                 word_state pairs = enter_word(word);
                 generate_regex(pairs);
-                temp.clear();
                 for (int i = 0; i < threads; i++) {
                     guessers_threads.emplace_back(&threaded_analysis::guessers, this, i * blocks);
                 }
 
                 for (auto &thread : guessers_threads) {
+                    std::cout << "Joining thread" << std::endl;
                     thread.join();
                 }
+
+                for (std::string &w : temp) {
+                    std::cout << w << std::endl;
+                }
+
                 guessers_threads.clear();
             } catch (std::exception& e) {
                 std::cerr << e.what() << std::endl;
@@ -166,14 +173,16 @@ private:
     void guessers(int index) {
         while (true) {
             std::unique_lock<std::mutex> lock(mtx);
+            std::cout << "Waiting for condition variable" << std::endl;
+            // TODO: this is not working as intended.
+            //  need to review the blocking conditions, as we need a singular pass rather
+            //  than an holistic stop.
             cv.wait(lock, [&] { return complete; });
 
-            if (complete) {
+            if (complete)
                 return;
-            }
 
             workers++;
-
             lock.unlock();
 
             std::vector<std::string> good_words;
@@ -183,16 +192,13 @@ private:
                     good_words.push_back(words[i]);
                 }
             }
-
             lock.lock();
-
-            temp.insert(temp.end(), good_words.begin(), good_words.end());
             workers--;
-
-            lock.unlock();
+            temp.insert(temp.end(), good_words.begin(), good_words.end());
 
             if (workers == 0)
                 complete = true;
+
             cv.notify_all();
         }
     }
