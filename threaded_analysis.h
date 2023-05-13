@@ -53,9 +53,13 @@ public:
                 std::cin >> word;
                 word_state pairs = enter_word(word);
                 generate_regex(pairs);
+
+                unsigned int remaining_elements = words.size();
+                threads = std::min(threads, (remaining_elements + blocks - 1) / blocks); // Calculate actual number of threads
+
                 workers = threads; // Reset the worker counter
                 complete = false; // Reset the completion flag
-                for (int i = 0; i < threads; i++) {
+                for (unsigned int i = 0; i < threads; i++) {
                     guessers_threads.emplace_back(&threaded_analysis::guessers, this, i * blocks);
                 }
 
@@ -64,7 +68,6 @@ public:
                 cv.wait(lock, [&] { return complete; });
 
                 for (auto &thread : guessers_threads) {
-                    std::cout << "Joining thread" << std::endl;
                     thread.join();
                 }
 
@@ -197,4 +200,4 @@ private:
 };
 
 
-#endif //WORDLE_ANALYZER_THREADED_ANALYSIS_H
+#endif
