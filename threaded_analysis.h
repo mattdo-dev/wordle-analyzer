@@ -53,9 +53,15 @@ public:
                 std::cin >> word;
                 word_state pairs = enter_word(word);
                 generate_regex(pairs);
+                workers = threads; // Reset the worker counter
+                complete = false; // Reset the completion flag
                 for (int i = 0; i < threads; i++) {
                     guessers_threads.emplace_back(&threaded_analysis::guessers, this, i * blocks);
                 }
+
+                // Wait for all workers to finish
+                std::unique_lock<std::mutex> lock(mtx);
+                cv.wait(lock, [&] { return complete; });
 
                 for (auto &thread : guessers_threads) {
                     std::cout << "Joining thread" << std::endl;
@@ -169,37 +175,23 @@ private:
         return s;
     }
 
-    // TODO: idea is to merge the chunks into one vector.
     void guessers(int index) {
-        while (true) {
-            std::unique_lock<std::mutex> lock(mtx);
-            std::cout << "Waiting for condition variable" << std::endl;
-            // TODO: this is not working as intended.
-            //  need to review the blocking conditions, as we need a singular pass rather
-            //  than an holistic stop.
-            cv.wait(lock, [&] { return complete; });
-
-            if (complete)
-                return;
-
-            workers++;
-            lock.unlock();
-
-            std::vector<std::string> good_words;
-            std::regex regex(regex_expr, std::regex::ECMAScript | std::regex::icase);
-            for (int i = index; i < index + blocks && i < words.size(); i++) {
-                if (std::regex_match(words[i], regex)) {
-                    good_words.push_back(words[i]);
-                }
+        std::vector<std::string> good_words;
+        std::regex regex(regex_expr, std::regex::ECMAScript | std::regex::icase);
+        for (int i = index; i < index + blocks && i < words.size(); i++) {
+            if (std::regex_match(words[i], regex)) {
+                good_words.push_back(words[i]);
             }
-            lock.lock();
-            workers--;
-            temp.insert(temp.end(), good_words.begin(), good_words.end());
+        }
 
-            if (workers == 0)
-                complete = true;
+        std::unique_lock<std::mutex> lock(mtx);
+        temp.insert(temp.end(), good_words.begin(), good_words.end());
+        workers--;
 
-            cv.notify_all();
+        // If this was the last worker, notify the main thread
+        if (workers == 0) {
+            complete = true;
+            cv.notify_one();
         }
     }
 };
